@@ -87,10 +87,14 @@ h1 {
 }
 
 .subtitle {
-    color: #00d4ff;
-    font-size: 1rem;
-    margin-bottom: 16px;
-    opacity: 0.9;
+    font-size: 1.1rem; /* Slightly smaller than the title */
+    color: #00ff88 !important; /* Force the color to apply */
+    text-shadow: 0 0 8px rgba(0, 255, 136, 0.4); /* Similar glow effect */
+    margin-bottom: 12px; /* Adjust spacing */
+}
+
+.subtitle a {
+    color: inherit;
 }
 
 .output p {
