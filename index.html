@@ -33,16 +33,29 @@
             </div>
             <div class="output projects-grid">
                 <div class="project">
+                    <div class="project-carousel" data-carousel>
+                        <img src="media/cnn_radfusion_dashboard.jpeg" alt="RadFusion dashboard preview" class="carousel-slide active">
+                        <img src="media/model_architecture.png" alt="RadFusion model pipeline" class="carousel-slide">
+                        <img src="media/chef_aug_simplified.jpeg" alt="RadFusion explainability results" class="carousel-slide">
+                        <button class="carousel-btn prev" type="button" aria-label="Previous slide">❮</button>
+                        <button class="carousel-btn next" type="button" aria-label="Next slide">❯</button>
+                        <div class="carousel-dots" role="tablist" aria-label="RadFusion image slides">
+                            <button class="carousel-dot active" type="button" aria-label="Show slide 1" data-slide="0"></button>
+                            <button class="carousel-dot" type="button" aria-label="Show slide 2" data-slide="1"></button>
+                            <button class="carousel-dot" type="button" aria-label="Show slide 3" data-slide="2"></button>
+                        </div>
+                    </div>
                     <span class="dir">📁 RadFusion/</span>
-                    <p><strong>Explainable AI for Chest X-Ray Diagnosis</strong></p>
-                    <p>Deep-learning medical imaging framework integrating radiographic data with patient clinical history. Recognized at SparkX and IRIS, published on Academia.</p>
+                    <p><strong>Novel Deep-Learning Pipeline for Explainable Diagnosis of Thoracic Diseases</strong></p>
+                    <p>Current CNN-based models for diagnosing thoracic diseases lack clinically aligned interpretability and perform suboptimally (AUC ~0.7) on certain pathologies. The kernel size of the CNN limits its ability to captured global patterns. RadFusion introduces a multimodal transformer framework trained on ~600k image-report pairs (combining the MIMIC-CXR and ChestX-Ray14 datasets) to address these probelms. The project introduces a novel augmentation technique called CHEF (Conditional Histogram Equalisation and Feature) augmentation that dynamically blends different augmentation techniques during training to enhance feature generalization and reduce class bias. The project also introduces a novel disease specific attention mechanism that gives a query vector to each disease to capture effective correlations beween features and specific diseases. The model is escpecially useful in busy hospitals where radiologists can supervise multiple models simultaniously to increase their productivity</p>
                     <a href="https://www.academia.edu/145548164/RadFusion_Explainable_Multimodal_Transformer_for_Thoracic_Condition_Detection_with_LLM_Enhanced_Interpretive_Reasoning" target="_blank" class="project-link">📄 Read Paper →</a>
                     <a href="https://github.com/not-ekalabya/radfusion" target="_blank" class="project-link">📑 GitHub →</a>
                 </div>
                 <div class="project">
+                    <img src="media/ghost.png" alt="GhostWidget project preview" class="project-image">
                     <span class="dir">📁 GhostWidget/</span>
-                    <p><strong>Contextual Memory Companion for ADHD</strong></p>
-                    <p>AI-powered personal memory assistant that learns user context, remembers tasks, and surfaces relevant information proactively.</p>
+                    <p><strong>Autonomous Desktop Agent for Managing Memories</strong></p>
+                    <p>Ghost is an AI-powered personal memory assistant, built for usecases where AI needs a lot of context about user's workflow, preferences, or needs. It looks at the screen of the user, proccess the screen recordings in small chunks and builds a vecotr database (FAISS) with the information it sees to build rich context about the user. The videos are pre-proccessed to reduce length and resolution of videos while keeping the key information visible. Afterwards, the videos are fed into the gemini 2.5 flash lite model that generates memory fragments. These memory fragments can form connections with documents, folders, github-commits and other memories. To make it feel like an actual assistant, Ghost can be connected to apps like GitHub. The project is enntirely open-sourced. It also has additional applications in ADHD care.</p>
                     <!-- <a href="https://ghostwidget.com" target="_blank" class="project-link">🔗 ghostwidget.com →</a> -->
                     <a href="https://github.com/not-ekalabya/ghost-widget" target="_blank" class="project-link">📑 GitHub →</a>
                 </div>
@@ -61,7 +74,7 @@
             </div>
 
             <div class="line">
-                <span class="prompt">$</span> <span class="command">ls achievements/</span>
+                <span class="prompt">$</span> <span class="command">ls national_achievements/</span>
             </div>
             <div class="output achievements-grid">
                 <div class="achievement-item">
@@ -106,7 +119,7 @@
             </div>
 
             <div class="line">
-                <span class="prompt">$</span> <span class="command">ls zonal_achievements/</span>
+                <span class="prompt">$</span> <span class="command">ls other_achievements/</span>
             </div>
             <div class="output zonal-grid">
                 <div class="zonal-item">
@@ -196,6 +209,56 @@
     </div>
 
     <script>
+        document.querySelectorAll('[data-carousel]').forEach((carousel) => {
+            const slides = carousel.querySelectorAll('.carousel-slide');
+            const dots = carousel.querySelectorAll('.carousel-dot');
+            const prevButton = carousel.querySelector('.carousel-btn.prev');
+            const nextButton = carousel.querySelector('.carousel-btn.next');
+            let currentIndex = 0;
+            let autoplayTimer;
+
+            const showSlide = (index) => {
+                currentIndex = (index + slides.length) % slides.length;
+
+                slides.forEach((slide, slideIndex) => {
+                    slide.classList.toggle('active', slideIndex === currentIndex);
+                });
+
+                dots.forEach((dot, dotIndex) => {
+                    dot.classList.toggle('active', dotIndex === currentIndex);
+                });
+            };
+
+            const startAutoplay = () => {
+                autoplayTimer = setInterval(() => {
+                    showSlide(currentIndex + 1);
+                }, 4000);
+            };
+
+            const stopAutoplay = () => {
+                clearInterval(autoplayTimer);
+            };
+
+            prevButton.addEventListener('click', () => {
+                showSlide(currentIndex - 1);
+            });
+
+            nextButton.addEventListener('click', () => {
+                showSlide(currentIndex + 1);
+            });
+
+            dots.forEach((dot) => {
+                dot.addEventListener('click', () => {
+                    showSlide(Number(dot.dataset.slide));
+                });
+            });
+
+            carousel.addEventListener('mouseenter', stopAutoplay);
+            carousel.addEventListener('mouseleave', startAutoplay);
+
+            startAutoplay();
+        });
+
         // Blinking cursor effect
         setInterval(() => {
             document.querySelector('.cursor').classList.toggle('blink');
