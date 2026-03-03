@@ -5,23 +5,134 @@
 }
 
 body {
-    background: #000000;
+    background: radial-gradient(circle at 20% 20%, rgba(0, 255, 136, 0.08), transparent 25%),
+                radial-gradient(circle at 80% 0%, rgba(0, 212, 255, 0.08), transparent 22%),
+                #020805;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     padding: 20px;
     font-family: 'Fira Code', monospace;
+    color: #e0e0e0;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Hide scrollbar while keeping scroll functionality */
+body, html {
+    scrollbar-width: none;
+}
+body::-webkit-scrollbar,
+html::-webkit-scrollbar {
+    display: none;
+}
+
+body::before,
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* Soft grid + drifting glyphs for hacker-screen vibe */
+body::before {
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='240'%3E%3Cstyle%3Etext{font-family:%22Fira%20Code%22,monospace;font-size:14px;letter-spacing:1.2px;}%3C/style%3E%3Ctext x='12' y='28' fill='%2300ff88' opacity='0.18'%3E01 0xA9 %F0%9D%95%9F%3C/text%3E%3Ctext x='22' y='62' fill='%2300ff88' opacity='0.16'%3E0x7E 0011%3C/text%3E%3Ctext x='14' y='98' fill='%2300ff88' opacity='0.14'%3E%CE%BB %7C %E2%88%9E %3C/text%3E%3Ctext x='36' y='138' fill='%2300ff88' opacity='0.2'%3Esudo run %3E%3C/text%3E%3Ctext x='8' y='176' fill='%2300ff88' opacity='0.18'%3E%5BOK%5D link%3C/text%3E%3Ctext x='64' y='208' fill='%2300ff88' opacity='0.16'%3E%CE%A3 %E2%86%91 %E2%86%93%3C/text%3E%3C/svg%3E"),
+        linear-gradient(rgba(0, 255, 136, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 136, 0.04) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(0, 212, 255, 0.06), rgba(0, 255, 136, 0.02));
+    background-size: 180px 240px, 140px 140px, 140px 140px, 100% 200%;
+    animation: drift 26s linear infinite;
+    mix-blend-mode: screen;
+    opacity: 0.5;
+}
+
+body::after {
+    background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 255, 136, 0.14) 0px,
+        rgba(0, 255, 136, 0.12) 1px,
+        transparent 3px,
+        transparent 6px
+    );
+    animation: scan 6s linear infinite;
+    mix-blend-mode: screen;
+    opacity: 0.35;
+}
+
+@keyframes drift {
+    0% { background-position: 0 0, 0 0, 0 0; }
+    100% { background-position: 0 140px, 140px 0, 0 200%; }
+}
+
+@keyframes scan {
+    0% { transform: translateY(-20px); }
+    100% { transform: translateY(20px); }
+}
+
+/* Animated character rain layer */
+.matrix-streams {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+    gap: 0;
+    overflow: hidden;
+    z-index: 0;
+    mix-blend-mode: screen;
+    opacity: 0.18;
+}
+
+.matrix-column {
+    position: relative;
+    height: 110vh;
+    transform: translateY(-120%);
+    animation: fall 12s linear infinite backwards;
+    animation-delay: var(--delay, 0s);
+    will-change: transform;
+}
+
+.matrix-column:nth-child(2n) { animation-duration: 14s; }
+.matrix-column:nth-child(3n) { animation-duration: 10s; }
+.matrix-column:nth-child(5n) { animation-duration: 16s; }
+
+.matrix-char {
+    display: block;
+    color: #00ff88;
+    opacity: 0.12;
+    font-size: 12px;
+    line-height: 1.25;
+    filter: drop-shadow(0 0 1px rgba(0, 255, 136, 0.14));
+    animation: glow 3.8s ease-in-out infinite alternate;
+}
+
+.matrix-char:nth-child(odd) { opacity: 0.16; }
+.matrix-char:nth-child(3n) { opacity: 0.22; }
+.matrix-char:nth-child(5n) { opacity: 0.28; }
+
+@keyframes fall {
+    0% { transform: translateY(-120%); }
+    100% { transform: translateY(100%); }
+}
+
+@keyframes glow {
+    from { opacity: 0.1; }
+    to { opacity: 0.35; }
 }
 
 .terminal {
     width: 100%;
     max-width: 1000px;
-    background: #0d0d0d;
+    background: rgba(5, 8, 6, 0.9);
     border-radius: 10px;
     box-shadow: 0 20px 60px rgba(0, 255, 136, 0.05);
     overflow: hidden;
     border: 1px solid #1a1a1a;
+    backdrop-filter: blur(4px);
 }
 
 .terminal-header {

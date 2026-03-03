@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="matrix-streams" aria-hidden="true"></div>
     <div class="terminal">
         <div class="terminal-header">
             <div class="terminal-buttons">
@@ -209,6 +210,59 @@
     </div>
 
     <script>
+        // Matrix character rain (time-reactive)
+        (() => {
+            const container = document.querySelector('.matrix-streams');
+            if (!container) return;
+
+            const baseChars = '01{}[]<>=+-/*$#λΩΣπ';
+            const makeTimestamp = () => new Date().toLocaleTimeString([], { hour12: false });
+
+            const buildColumns = () => {
+                container.innerHTML = '';
+                const columnCount = Math.ceil(window.innerWidth / 32);
+                const rows = Math.ceil(window.innerHeight / 28) + 3;
+
+                for (let i = 0; i < columnCount; i++) {
+                    const col = document.createElement('div');
+                    col.className = 'matrix-column';
+                    col.style.setProperty('--delay', `${(Math.random() * 8).toFixed(2)}s`);
+                    for (let r = 0; r < rows; r++) {
+                        const span = document.createElement('span');
+                        span.className = 'matrix-char';
+                        col.appendChild(span);
+                    }
+                    container.appendChild(col);
+                }
+            };
+
+            const randomChar = (timestamp) => {
+                if (Math.random() < 0.08) {
+                    const t = timestamp.replace(/:/g, '');
+                    return t[Math.floor(Math.random() * t.length)];
+                }
+                return baseChars[Math.floor(Math.random() * baseChars.length)];
+            };
+
+            const tick = () => {
+                const now = makeTimestamp();
+                const chars = container.querySelectorAll('.matrix-char');
+                chars.forEach((ch, i) => {
+                    if (i % 10 === 0 || Math.random() < 0.12) {
+                        ch.textContent = randomChar(now);
+                    }
+                });
+            };
+
+            buildColumns();
+            tick();
+            setInterval(tick, 420);
+            window.addEventListener('resize', () => {
+                buildColumns();
+                tick();
+            });
+        })();
+
         document.querySelectorAll('[data-carousel]').forEach((carousel) => {
             const slides = carousel.querySelectorAll('.carousel-slide');
             const dots = carousel.querySelectorAll('.carousel-dot');
